@@ -73,6 +73,9 @@ fn draw() void {
     c.ClearBackground(c.BLACK);
 
     renderFFT(400, 200);
+
+    c.DrawFPS(10, 10);
+    c.DrawText("wait for it...", (WIN_WIDTH / 2) - 50, (WIN_HEIGHT / 2) + 40, 20, c.GRAY);
 }
 
 fn renderFFT(bottomY: c_int, height: c_int) void {

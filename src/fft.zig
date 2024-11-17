@@ -19,7 +19,6 @@
 ///
 const std = @import("std");
 const c = @import("c_defs.zig").c;
-
 const circBuf = @import("circularbuf.zig").CircularBuf;
 
 /// Original credit: @Tsoding
@@ -59,48 +58,8 @@ const hannTable: [FFT_SIZE]f32 align(CACHE_LINE_SIZE_BYTES) = blk: {
     break :blk tbl;
 };
 
-// Question: can i align fields of a struct?
-const Foo = struct {
-    a: u32 align(16) = 0x33,
-    b: u8 align(16) = 0xff,
-    c: u64 align(16) = 0xee,
-};
-
-const Bar = struct {
-    a: u32 = 0x33,
-    b: u8 = 0xff,
-    c: u64 = 0xee,
-};
-
 pub const FFT_Analyzer = struct {
     pub fn reset() void {
-        // Left off here.
-        std.debug.print("Foo\n*********\n", .{});
-        const f = Foo{};
-        std.log.debug("foo => {}, @sizeOf(foo) => {d}", .{ f, @sizeOf(Foo) });
-        std.log.debug("f @bitSize(Foo) => {d}", .{@bitSizeOf(Foo)});
-        std.log.debug("@alignOf(Foo.c) => {d}", .{@alignOf(Foo)});
-        std.log.debug("f ptr => {*}", .{&f});
-
-        const b = std.mem.asBytes(&f);
-        std.log.debug("asBytes(Foo) => {s}", .{std.fmt.fmtSliceHexLower(b)});
-
-        std.debug.print("Bar\n*********\n", .{});
-        const bar = Bar{};
-        std.log.debug("bar => {}, @sizeOf(bar) => {d}", .{ bar, @sizeOf(Bar) });
-        std.log.debug("f @bitSize(Bar) => {d}", .{@bitSizeOf(Bar)});
-        std.log.debug("@alignOf(bar.c) => {d}", .{@alignOf(Bar)});
-        std.log.debug("bar ptr => {*}", .{&bar});
-
-        const b1 = std.mem.asBytes(&bar);
-        std.log.debug("asBytes(bar) => {s}", .{std.fmt.fmtSliceHexLower(b1)});
-
-        const total = @sizeOf(Foo) + @sizeOf(Bar);
-        std.log.debug("size of both structs: {d}", .{total});
-
-        const rawData: [*]const u8 = @ptrCast(@alignCast(&f));
-        std.log.debug("size of both structs: {d}", .{std.fmt.fmtSliceHexLower(rawData[0..total])});
-
         in_raw_circBuf.init();
         fft_clean();
     }
