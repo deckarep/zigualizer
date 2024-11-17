@@ -1,0 +1,18 @@
+.{
+    .name = "zigualizer",
+    .version = "0.0.1",
+    .minimum_zig_version = "0.13.0",
+
+    .dependencies = .{},
+
+    .paths = .{
+        "LICENSE",
+        "README.md",
+
+        "build.zig",
+        "build.zig.zon",
+        "src/c_defs.zig",
+        "src/circularbuf.zig",
+        "src/fft.zig",
+    },
+}
