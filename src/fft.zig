@@ -34,7 +34,7 @@ const selectedCopyStyle = .circularBuf;
 // Should be a power of 2: 9 is safe so far.
 pub const FFT_SIZE = 1 << 9; // Good enough, CPU is low.
 
-// FFT Analyzer data - aligning all of them to start on a cache line.
+/// FFT Analyzer data - aligning all of them to start on a cache line.
 const CACHE_LINE_SIZE_BYTES = 8;
 var out_raw: [FFT_SIZE]std.math.Complex(f32) align(CACHE_LINE_SIZE_BYTES) = undefined;
 var in_raw: [FFT_SIZE]f32 align(CACHE_LINE_SIZE_BYTES) = undefined;
@@ -46,7 +46,7 @@ var out_log: [FFT_SIZE]f32 align(CACHE_LINE_SIZE_BYTES) = undefined;
 var out_smooth: [FFT_SIZE]f32 align(CACHE_LINE_SIZE_BYTES) = undefined;
 var out_smear: [FFT_SIZE]f32 align(CACHE_LINE_SIZE_BYTES) = undefined;
 
-// Generate the hann window table at comptime.
+/// Generate the hann window table at comptime, to reduce some cpu load.
 const hannTable: [FFT_SIZE]f32 align(CACHE_LINE_SIZE_BYTES) = blk: {
     @setEvalBranchQuota(FFT_SIZE + 1);
     var tbl: [FFT_SIZE]f32 = undefined;
@@ -58,6 +58,7 @@ const hannTable: [FFT_SIZE]f32 align(CACHE_LINE_SIZE_BYTES) = blk: {
     break :blk tbl;
 };
 
+/// The primary object which holds and analyzes fft state.
 pub const FFT_Analyzer = struct {
     pub fn reset() void {
         in_raw_circBuf.init();
@@ -90,14 +91,14 @@ pub const FFT_Analyzer = struct {
         }
     }
 
-    // smoothed returns a reference to the smoothed out data which makes the audio less jumpy.
-    pub fn smoothed() []const f32 {
+    /// smoothed returns a reference to the smoothed out data which makes the audio less jumpy.
+    pub inline fn smoothed() []const f32 {
         return out_smooth[0..];
     }
 
-    // smear returns a reference to the smeared out data which really tames visualizing. I prefer
-    // this one much less so far.
-    pub fn smeared() []const f32 {
+    /// smear returns a reference to the smeared out data which really tames visualizing. I prefer
+    /// this one much less so far.
+    pub inline fn smeared() []const f32 {
         return out_smear[0..];
     }
 
@@ -205,7 +206,7 @@ pub const FFT_Analyzer = struct {
         return m;
     }
 
-    fn amp(z: std.math.Complex(f32)) f32 {
+    inline fn amp(z: std.math.Complex(f32)) f32 {
         const a = std.math.Complex(f32).init(z.re, 0);
         const b = std.math.Complex(f32).init(0, z.im);
         const sum = a.add(b);
@@ -214,7 +215,7 @@ pub const FFT_Analyzer = struct {
     }
 
     // fft_settled isn't used currently.
-    fn fft_settled() bool {
+    inline fn fft_settled() bool {
         const eps: f32 = 1e-3;
         for (0..FFT_SIZE) |i| {
             if (out_smooth[i] > eps) return false;
@@ -223,7 +224,7 @@ pub const FFT_Analyzer = struct {
         return true;
     }
 
-    fn fft_clean() void {
+    inline fn fft_clean() void {
         const zeroComp = std.math.Complex(f32).init(0, 0);
         @memset(&out_raw, zeroComp);
 
