@@ -1,5 +1,6 @@
 # zigualizer
 Zigualizer: A music visualizer built with Zig, powered by the FFT algorithm.
+[Click here](https://youtu.be/6h9Bty-wdMA) for a demo on YouTube!
 
 ![](screenshot.png)
 

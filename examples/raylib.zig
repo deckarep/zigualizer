@@ -42,6 +42,8 @@ fn visualizer() !void {
     c.InitAudioDevice();
     c.SetTargetFPS(60);
 
+    c.PollInputEvents();
+
     // Load Music
     // First grab the path to the exe.
     var buff: [512]u8 = undefined;
