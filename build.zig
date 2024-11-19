@@ -67,8 +67,8 @@ fn exampleTargets(
         });
 
         // For examples, link Raylib and any other C deps.
-        exe.addObjectFile(b.path("libs/raylib-5.0-macos/lib/libraylib.a"));
-        exe.addIncludePath(b.path("libs/raylib-5.0-macos/include"));
+        exe.addObjectFile(b.path("libs/raylib-5.5_macos/lib/libraylib.a"));
+        exe.addIncludePath(b.path("libs/raylib-5.5_macos/include"));
 
         exe.linkFramework("CoreVideo");
         exe.linkFramework("IOKit");
