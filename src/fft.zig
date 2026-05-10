@@ -104,7 +104,7 @@ pub const FFT_Analyzer = struct {
 
     // fft_process_callback matches the Raylib 5.0 callback API: c.AudioCallback, this is responsible
     // for consuming all frames and tracking the data in order to process it.
-    pub fn fft_process_callback(bufferData: ?*anyopaque, frames: c_uint) callconv(.C) void {
+    pub fn fft_process_callback(bufferData: ?*anyopaque, frames: c_uint) callconv(.c) void {
         const Frame = struct {
             left: f32,
             right: f32,

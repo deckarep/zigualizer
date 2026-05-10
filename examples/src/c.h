@@ -1,6 +1,6 @@
 /// Open Source Initiative OSI - The MIT License (MIT):Licensing
 /// The MIT License (MIT)
-/// Copyright (c) 2024 Ralph Caraveo (deckarep@gmail.com)
+/// Copyright (c) 2026 Ralph Caraveo (deckarep@gmail.com)
 /// Permission is hereby granted, free of charge, to any person obtaining a copy of
 /// this software and associated documentation files (the "Software"), to deal in
 /// the Software without restriction, including without limitation the rights to
@@ -17,7 +17,6 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-pub const c = @cImport({
-    @cInclude("raylib.h");
-    @cInclude("rlgl.h");
-});
+#include "raylib.h"
+#include "rlgl.h"
+#include "raymath.h"

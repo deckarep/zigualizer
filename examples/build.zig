@@ -11,23 +11,39 @@ pub fn build(b: *std.Build) void {
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
     const optimize = b.standardOptimizeOption(.{});
 
-    const exe = b.addExecutable(.{
-        .name = "raylib-example",
-        .root_source_file = b.path("raylib.zig"),
+    const translate_c = b.addTranslateC(.{
+        .root_source_file = b.path("src/c.h"),
         .target = target,
         .optimize = optimize,
     });
 
-    exe.addObjectFile(b.path("../libs/raylib-5.5_macos/lib/libraylib.a"));
-    exe.addIncludePath(b.path("../libs/raylib-5.5_macos/include"));
+    const raylib_path = "../libs/raylib-6.0_macos/";
 
-    exe.linkFramework("CoreVideo");
-    exe.linkFramework("IOKit");
-    exe.linkFramework("Cocoa");
-    exe.linkFramework("GLUT");
-    exe.linkFramework("OpenGL");
+    translate_c.linkSystemLibrary("c", .{});
+    translate_c.addIncludePath(b.path(raylib_path ++ "include"));
 
-    exe.linkSystemLibrary("c");
+    const exe = b.addExecutable(.{
+        .name = "raylib-example",
+        .root_module = b.createModule(.{
+            .root_source_file = .{ .cwd_relative = "src/main.zig" },
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{
+                    .name = "c",
+                    .module = translate_c.createModule(),
+                },
+            },
+        }),
+    });
+
+    exe.root_module.addObjectFile(b.path(raylib_path ++ "lib/libraylib.a"));
+
+    exe.root_module.linkFramework("CoreVideo", .{});
+    exe.root_module.linkFramework("IOKit", .{});
+    exe.root_module.linkFramework("Cocoa", .{});
+    exe.root_module.linkFramework("GLUT", .{});
+    exe.root_module.linkFramework("OpenGL", .{});
 
     // Resolve the 'library' dependency.
     const zigualizer_dep = b.dependency("zigualizer", .{});

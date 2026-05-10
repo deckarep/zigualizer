@@ -1,6 +1,6 @@
 /// Open Source Initiative OSI - The MIT License (MIT):Licensing
 /// The MIT License (MIT)
-/// Copyright (c) 2024 Ralph Caraveo (deckarep@gmail.com)
+/// Copyright (c) 2026 Ralph Caraveo (deckarep@gmail.com)
 /// Permission is hereby granted, free of charge, to any person obtaining a copy of
 /// this software and associated documentation files (the "Software"), to deal in
 /// the Software without restriction, including without limitation the rights to
@@ -18,7 +18,7 @@
 /// SOFTWARE.
 ///
 const std = @import("std");
-pub const c = @import("c_defs.zig").c;
+const c = @import("c");
 const fft = @import("zigualizer");
 
 const codebase = "All your codebase are belong to us.";
@@ -30,11 +30,11 @@ const trackPath = "resources/audio/Tick of the Clock.mp3";
 var frames: usize = undefined;
 var tickOfTheClock: c.Music = undefined;
 
-pub fn main() !void {
-    try visualizer();
+pub fn main(init: std.process.Init) !void {
+    try visualizer(init.io);
 }
 
-fn visualizer() !void {
+fn visualizer(io: std.Io) !void {
     fft.FFT_Analyzer.reset();
 
     c.SetConfigFlags(c.FLAG_VSYNC_HINT | c.FLAG_WINDOW_RESIZABLE);
@@ -44,12 +44,10 @@ fn visualizer() !void {
 
     c.PollInputEvents();
 
-    // Load Music
     // First grab the path to the exe.
-    var buff: [512]u8 = undefined;
-    const exeDir = try std.fs.selfExeDirPath(&buff);
-
-    const adjustPath = std.mem.endsWith(u8, exeDir, "examples/zig-out/bin");
+    var buff: [1024]u8 = undefined;
+    const buffIdx = try std.process.executableDirPath(io, &buff);
+    const adjustPath = std.mem.endsWith(u8, buff[0..buffIdx], "examples/zig-out/bin");
     const tickOfTheClockPath = if (adjustPath) "../" ++ trackPath else trackPath;
 
     tickOfTheClock = c.LoadMusicStream(tickOfTheClockPath);

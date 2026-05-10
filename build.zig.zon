@@ -1,7 +1,8 @@
 .{
-    .name = "zigualizer",
+    .fingerprint = 0xb0fc80b80d571ccb,
+    .name = .zigualizer,
     .version = "0.0.1",
-    .minimum_zig_version = "0.13.0",
+    .minimum_zig_version = "0.16.0",
 
     .dependencies = .{},
 
