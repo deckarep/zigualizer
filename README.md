@@ -6,7 +6,7 @@ Zigualizer: A music visualizer built with Zig, powered by the FFT algorithm.
 
 ## Details
 This implementation was originally based on the [Musializer project by @Tsoding](https://github.com/tsoding/musializer/blob/master/src/plug.c).
-This version as it stands has been tested to work with Raylib 5.0.
+This version as it stands has been tested to work with Zig 0.16.0 + Raylib 6.0.
 I have modified this version to be backed by a generic circular buffer over a 
 fixed size array. Additionally, I am leveraging comptime in a few spots to
 generate some static windowing functions.
